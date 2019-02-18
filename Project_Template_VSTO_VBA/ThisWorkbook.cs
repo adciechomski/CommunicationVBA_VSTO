@@ -12,8 +12,15 @@ using Office = Microsoft.Office.Core;
 
 namespace Project_Template_VSTO_VBA
 {
+    [System.Runtime.InteropServices.ComVisible(true)]
+    [System.Runtime.InteropServices.ClassInterface(
+    System.Runtime.InteropServices.ClassInterfaceType.None)]
     public partial class ThisWorkbook
     {
+        protected override object GetAutomationObject()
+        {
+            return new VbaCommunication();
+        }
         private void ThisWorkbook_Startup(object sender, System.EventArgs e)
         {
         }
