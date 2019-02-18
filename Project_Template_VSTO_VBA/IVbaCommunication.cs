@@ -7,14 +7,12 @@ namespace Project_Template_VSTO_VBA
     [System.Runtime.InteropServices.ComVisible(true)]
     public interface IVbaCommunication
     {
-        void BindDataToExcel(Range range, object[,] response);
-        string[] CitiesinZA();
-        ArrayList GetComplexArray();
         IDataTransferObject GetComplexObject();
         ArrayList getListofObj();
         ArrayList GetSimpleArray();
-        object getString(ref object gg);
-        IDataTransferObject[] ListDataTransferObject();
-        List<IDataTransferObject> RunReaderPages();
+        string getString(string stringFromVBA);
+        object objectToVSTO(ref object x);
+        string[,] stringArrayToVSTO(ref string[,] response);
+        Scripting.Dictionary passDictionary2VBA(string callName);
     }
 }

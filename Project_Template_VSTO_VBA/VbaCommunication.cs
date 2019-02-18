@@ -9,28 +9,33 @@ namespace Project_Template_VSTO_VBA
 {
     [System.Runtime.InteropServices.ComVisible(true)]
     [System.Runtime.InteropServices.ClassInterface(
-System.Runtime.InteropServices.ClassInterfaceType.None)]
+    System.Runtime.InteropServices.ClassInterfaceType.None)]
     public class VbaCommunication : IVbaCommunication
     {
         string naming { get; set; }
-        public object getString(ref object gg)
+        public string getString(string stringFromVBA)
         {
-            return gg;
+            stringFromVBA = stringFromVBA + " 123";
+            return stringFromVBA;
         }
-        public string[] CitiesinZA()
+        public string[,] stringArrayToVSTO(ref string[,] response)
         {
-            naming = "123";
-            string[] cities = new string[] { "Johannesburg", "Pretoria", "Cape Town" };
-            return cities;
+            response[1, 0] = "adam:";
+            return response;
         }
-        public void BindDataToExcel(Microsoft.Office.Interop.Excel.Range range, object[,] response)
+        public object objectToVSTO(ref object x)
         {
-            int rows = response.GetLength(0);
-            int cols = response.GetLength(1);
-            int n = 0;
-            Microsoft.Office.Interop.Excel.Range newRange = range.get_Offset(n, 0).get_Resize(rows - n, cols);
-            newRange.Value = response;
+            object ii = x.GetType().InvokeMember("ii", System.Reflection.BindingFlags.GetProperty, null, x, null);
+            object ss = x.GetType().InvokeMember("ss", System.Reflection.BindingFlags.GetProperty, null, x, null);
+
+            int number = System.Convert.ToInt32(ii);
+            string value = System.Convert.ToString(ss);
+
+            //System.Windows.Forms.MessageBox.Show(number + value);
+            //x.ii = 12;
+            return x;
         }
+
         public ArrayList GetSimpleArray()
         {
             ArrayList arr = new ArrayList();
@@ -38,23 +43,9 @@ System.Runtime.InteropServices.ClassInterfaceType.None)]
             arr.Add(2);
             return arr;
         }
-        public ArrayList GetComplexArray()
-        {
-            ArrayList arr = new ArrayList();
-            arr.Add(new DataTransferObject() { Id = "2" });
-            arr.Add(new DataTransferObject() { Id = "3" });
-            return arr;
-        }
         public IDataTransferObject GetComplexObject()
         {
             return new DataTransferObject() { Id = "2" };
-        }
-        public IDataTransferObject[] ListDataTransferObject()
-        {
-            IDataTransferObject[] iDataTransferObjectlist = new DataTransferObject[1];
-            iDataTransferObjectlist[0] = GetComplexObject();
-            //IListDataTransferObject iDataTransferObjectL = new ArrayList();
-            return iDataTransferObjectlist;
         }
         public ArrayList getListofObj()
         {
@@ -63,21 +54,12 @@ System.Runtime.InteropServices.ClassInterfaceType.None)]
             arr.Add(new DataTransferObject() { Id = "3" });
             return arr;
         }
-        public List<IDataTransferObject> RunReaderPages()
+        public Scripting.Dictionary passDictionary2VBA(string callName)
         {
-            /* 1. make a List of PdfReaderPage elements */
-            List<IDataTransferObject> csharp_list = new List<IDataTransferObject>()
-        {
-            new DataTransferObject() { Id = "2" },
-            new DataTransferObject() { Id = "3", Name = "adam" },
-            new DataTransferObject() { Id = "2" }
-        };
-            /* 2. convert it into a vb collection */
-            // var vb_coll = new Microsoft.VisualBasic.Collection();
-            // csharp_list.ForEach(x => vb_coll.Add(x));
-            /* 3. deliver it */
-            //return vb_coll;
-            return csharp_list;
+            Scripting.Dictionary dict = new Scripting.Dictionary();
+            dict.Add("Apples", new DataTransferObject() { Id = callName });
+            dict.Add("Oranges", new DataTransferObject() { Id = callName });
+            return dict;
         }
     }
 
@@ -89,24 +71,5 @@ System.Runtime.InteropServices.ClassInterfaceType.None)]
         string[,] arr { get; set; }
     }
 
-    [System.Runtime.InteropServices.ComVisible(true)]
-    [System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.None)]
-    public sealed class DataTransferObject : IDataTransferObject
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string[,] arr { get; set; }
 
-        public DataTransferObject()
-        {
-            string[,] countries =  { { "Johannesburg", "Pretoria", "Cape Town" }, { "asd", "ada", "ola"} };
-            this.arr = countries;
-        }
-
-        public DataTransferObject(string id, string name)
-        {
-            this.Id = id;
-            this.Name = name;
-        }
-    }
 }
